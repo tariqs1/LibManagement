@@ -72,7 +72,7 @@ class LibraryManagement:
         self.librarians = []
 
     def clear_entry(self, event):
-       # Clears the placeholder text when the user clicks on the entry field.
+        # Clears the placeholder text when the user clicks on the entry field.
         widget = event.widget
         if widget.get() in ["Username", "Password"]:
             widget.delete(0, tk.END)
@@ -99,12 +99,61 @@ class LibraryManagement:
                 return
         messagebox.showerror("Error", "Invalid username or password")
 
+    # def register(self):
+    #     self.username = self.username_entry.get()
+    #     self.password = self.password_entry.get()
+    #     self.librarians.append([self.username, self.password])
+    #     self.username_entry.delete(0, tk.END)
+    #     self.password_entry.delete(0, tk.END)
+
     def register(self):
-        self.username = self.username_entry.get()
-        self.password = self.password_entry.get()
-        self.librarians.append([self.username, self.password])
-        self.username_entry.delete(0, tk.END)
-        self.password_entry.delete(0, tk.END)
+        """Opens the registration form in a new window."""
+        register_window = tk.Toplevel(self.master)
+        register_window.title("Register")
+        register_window.geometry("400x500")
+        register_window.configure(bg="#F5F5F5")
+
+        # Registration Form
+        fields = ["First Name", "Last Name", "Email", "Phone", "Address", "City", "State", "Postal Code", "Username"]
+        self.entries = {}
+
+        for i, field in enumerate(fields):
+            label = tk.Label(register_window, text=field + ":", font=("Helvetica", 12), bg="#F5F5F5")
+            label.grid(row=i, column=0, padx=10, pady=5, sticky="w")
+
+            entry = tk.Entry(register_window, font=("Helvetica", 12), width=30)
+            entry.grid(row=i, column=1, padx=10, pady=5)
+
+            self.entries[field] = entry  # Store entries in a dictionary
+        # Password Field
+        password_label = tk.Label(register_window, text="Password:", font=("Helvetica", 12), bg="#F5F5F5")
+        password_label.grid(row=len(fields), column=0, padx=10, pady=5, sticky="w")
+        password_entry = tk.Entry(register_window, font=("Helvetica", 12), width=30, show="*")
+        password_entry.grid(row=len(fields), column=1, padx=10, pady=5)
+
+        # Confirm Password Field
+        confirm_password_label = tk.Label(register_window, text="Confirm Password:", font=("Helvetica", 12),
+                                          bg="#F5F5F5")
+        confirm_password_label.grid(row=len(fields) + 1, column=0, padx=10, pady=5, sticky="w")
+        confirm_password_entry = tk.Entry(register_window, font=("Helvetica", 12), width=30, show="*")
+        confirm_password_entry.grid(row=len(fields) + 1, column=1, padx=10, pady=5)
+
+        # Submit Button
+        self.submit_button = tk.Button(register_window, text="Submit", font=("Helvetica", 14), bg="#4CAF50",
+                                       fg="white",
+                                       command=self.validate_registration)
+        self.submit_button.grid(row=len(fields) + 2, column=0, columnspan=2, pady=20)
+
+    def validate_registration(self):
+        """Validates that all registration fields are filled before proceeding."""
+        for field, entry in self.entries.items():
+            if not entry.get().strip():  # Check if the field is empty
+                messagebox.showerror("Input Error", f"{field} cannot be empty!")
+                return
+
+        # If all fields are valid, save user details (you can modify this for database insertion)
+        messagebox.showinfo("Success", "Registration successful!")
+        self.register_window.destroy()  # Close the registration window
 
     def library_management_screen(self):
         self.add_book_label = tk.Label(self.master, text="Add Book", font=("Helvetica", 16), bg='#708090', fg='white')
