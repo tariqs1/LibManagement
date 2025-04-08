@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}My Account - Library Management System{% endblock %}
+
+{% block content %}
+<div class="profile-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
+            <p>Email: {{ user.email }}</p>
+            <p>Account Type: {{ user.get_user_type_display }}</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <p>Member since: {{ user.date_joined|date:"F d, Y" }}</p>
+        </div>
+    </div>
+</div>
+
+<ul class="nav nav-tabs" id="profileTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="borrowed-tab" data-toggle="tab" href="#borrowed" role="tab">
+            Current Loans <span class="badge badge-primary">{{ borrowed_books.count }}</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab">
+            Borrowing History <span class="badge badge-secondary">{{ past_borrows.count }}</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab">
+            My Reviews <span class="badge badge-secondary">{{ reviews.count }}</span>
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content" id="profileTabsContent">
+    <div class="tab-pane fade show active" id="borrowed" role="tabpanel">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Borrowed On</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for borrow in borrowed_books %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'book_detail' borrow.book.id %}">{{ borrow.book.title }}</a>
+                            </td>
+                            <td>{{ borrow.borrow_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if borrow.due_date < today %}
+                                    <span class="text-danger">{{ borrow.due_date|date:"M d, Y" }} (Overdue)</span>
+                                {% else %}
+                                    {{ borrow.due_date|date:"M d, Y" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">Active</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'return_book' borrow.id %}" class="btn btn-sm btn-success">Return</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">You don't have any books currently borrowed.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="history" role="tabpanel">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Borrowed On</th>
+                        <th>Returned On</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for borrow in past_borrows %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'book_detail' borrow.book.id %}">{{ borrow.book.title }}</a>
+                            </td>
+                            <td>{{ borrow.borrow_date|date:"M d, Y" }}</td>
+                            <td>{{ borrow.return_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if borrow.return_date > borrow.due_date %}
+                                    <span class="badge badge-warning">Returned Late</span>
+                                {% else %}
+                                    <span class="badge badge-success">Returned</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">You haven't borrowed any books previously.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="tab-pane fade" id="reviews" role="tabpanel">
+        {% for review in reviews %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">
+                            <a href="{% url 'book_detail' review.book.id %}">{{ review.book.title }}</a>
+                        </h5>
+                        <div class="stars">
+                            {% for i in "12345"|make_list %}
+                                {% if forloop.counter <= review.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <p class="card-text">{{ review.comment }}</p>
+                    <p class="card-text"><small class="text-muted">Posted on {{ review.created_at|date:"F d, Y" }}</small></p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info">You haven't written any reviews yet.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

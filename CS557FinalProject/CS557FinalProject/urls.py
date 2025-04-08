@@ -16,7 +16,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
+from LibraryManagement import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
+    path('books/', views.book_list, name='book_list'),
+    path('books/<int:book_id>/', views.book_detail, name='book_detail'),
+    path('books/<int:book_id>/borrow/', views.borrow_book, name='borrow_book'),
+    path('books/add/', views.add_book, name='add_book'),
+    path('borrows/<int:borrow_id>/return/', views.return_book, name='return_book'),
+    path('register/', views.register, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('profile/', views.profile, name='profile'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

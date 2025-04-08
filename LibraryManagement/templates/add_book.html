@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Book - Library Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Add New Book</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="id_title">Book Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.title.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_author">Author</label>
+                        {{ form.author }}
+                        {% if form.author.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.author.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_isbn">ISBN</label>
+                            {{ form.isbn }}
+                            {% if form.isbn.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.isbn.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_publication_date">Publication Date</label>
+                            {{ form.publication_date }}
+                            {% if form.publication_date.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.publication_date.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_description">Description</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.description.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_cover_image">Cover Image</label>
+                            {{ form.cover_image }}
+                            {% if form.cover_image.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.cover_image.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_available_copies">Available Copies</label>
+                            {{ form.available_copies }}
+                            {% if form.available_copies.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.available_copies.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Add Book</button>
+                        <a href="{% url 'book_list' %}" class="btn btn-outline-secondary ml-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
