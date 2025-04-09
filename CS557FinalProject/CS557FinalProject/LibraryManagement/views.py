@@ -138,8 +138,3 @@ def add_book(request):
         form = BookForm()
 
     return render(request, 'add_book.html', {'form': form})
-
-
-from django.shortcuts import render
-
-# Create your views here.

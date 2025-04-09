@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'LibraryManagement'
+    'CS557FinalProject.LibraryManagement'
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'CS557FinalProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'LibraryManagement/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'LibraryManagement', 'templates')],  # Note the comma instead of slash
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,18 +73,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'CS557FinalProject.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# Database settings for MySQL
+# Database settings for SQLite
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # or 'mysql.connector.django' if using mysql-connector-python
-        'NAME': 'library_db',
-        'USER': 'your_mysql_username',
-        'PASSWORD': 'your_mysql_password',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
