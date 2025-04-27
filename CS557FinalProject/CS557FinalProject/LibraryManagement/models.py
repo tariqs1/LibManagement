@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
+from django.template.defaultfilters import default
+
 
 @receiver(post_migrate)
 def create_groups(sender, **kwargs):
@@ -31,58 +33,6 @@ class PaymentMethod(models.TextChoices):
     CASH = 'Cash', 'Cash'
     CARD = 'Card', 'Card'
     ONLINE = 'Online', 'Online'
-
-class Author(models.Model):
-    author_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-
-class Location(models.Model):
-    location_id = models.AutoField(primary_key=True)
-    city = models.CharField(max_length=50)
-    state = models.CharField(max_length=50)
-    postal_code = models.CharField(max_length=20)
-    country = models.CharField(max_length=100)
-
-class Publisher(models.Model):
-    publisher_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=45)
-    email = models.CharField(max_length=100)
-    website = models.CharField(max_length=255)
-    location_id = models.ForeignKey(Location, on_delete=models.CASCADE)
-
-class Book(models.Model):
-    book_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    isbn = models.CharField(max_length=20)
-    publication_date = models.DateField()
-    pages = models.IntegerField()
-    available_copies = models.IntegerField()
-    total_copies = models.IntegerField()
-    description = models.TextField()
-    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
-    publisher_id = models.ForeignKey(Publisher, on_delete=models.CASCADE)
-
-class BookAuthor(models.Model):
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = (('book_id', 'author_id'),)
-
-class Genre(models.Model):
-    genre_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
-    description = models.TextField(max_length=500)
-
-class BookGenre(models.Model):
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
-    genre_id = models.ForeignKey(Genre, on_delete=models.CASCADE)
-    class Meta:
-        unique_together = (('book_id', 'genre_id'),)
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -123,6 +73,60 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class Author(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author_profile')
+    bio = models.TextField(blank=True, null=True)
+    author_id = models.AutoField(primary_key=True,default=None, unique=True)
+    first_name = models.CharField(max_length=100,default=None)
+    last_name = models.CharField(max_length=100,default=None)
+
+class Location(models.Model):
+    location_id = models.AutoField(primary_key=True)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    postal_code = models.CharField(max_length=20)
+    country = models.CharField(max_length=100)
+
+class Publisher(models.Model):
+    publisher_id = models.AutoField(primary_key=True,default=None)
+    name = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    phone = models.CharField(max_length=45)
+    email = models.CharField(max_length=100)
+    website = models.CharField(max_length=255)
+    location_id = models.ForeignKey(Location, on_delete=models.CASCADE)
+
+class Book(models.Model):
+    book_id = models.AutoField(primary_key=True, default=None)
+    title = models.CharField(max_length=255)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    isbn = models.CharField(max_length=20)
+    publication_date = models.DateField()
+    pages = models.IntegerField(default=None)
+    available_copies = models.IntegerField()
+    total_copies = models.IntegerField(default=None)
+    description = models.TextField()
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
+    publisher_id = models.ForeignKey(Publisher, on_delete=models.CASCADE, default=None)
+
+class BookAuthor(models.Model):
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('book_id', 'author_id'),)
+
+class Genre(models.Model):
+    genre_id = models.AutoField(primary_key=True,default=None)
+    name = models.CharField(max_length=100)
+    description = models.TextField(max_length=500)
+
+class BookGenre(models.Model):
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    genre_id = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    class Meta:
+        unique_together = (('book_id', 'genre_id'),)
+
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -148,7 +152,7 @@ class Borrowing(models.Model):
         return f"{self.user} borrowed {self.book}"
 
 class BorrowedBook(models.Model):
-    borrow_id = models.AutoField(primary_key=True)
+    borrow_id = models.AutoField(primary_key=True,default=None)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     borrow_date = models.DateField()
@@ -159,7 +163,7 @@ class BorrowedBook(models.Model):
     status = models.CharField(max_length=10, choices=BorrowStatus.choices)
 
 class LateFee(models.Model):
-    fee_id = models.AutoField(primary_key=True)
+    fee_id = models.AutoField(primary_key=True,default=None)
     borrow_id = models.ForeignKey(BorrowedBook, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -170,7 +174,7 @@ class LateFee(models.Model):
     notes = models.TextField(max_length=500, blank=True)
 
 class Staff(models.Model):
-    staff_id = models.AutoField(primary_key=True)
+    staff_id = models.AutoField(primary_key=True,default=None)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
@@ -180,7 +184,7 @@ class Staff(models.Model):
     password_hash = models.CharField(max_length=255)
 
 class Transaction(models.Model):
-    transaction_id = models.AutoField(primary_key=True)
+    transaction_id = models.AutoField(primary_key=True,default=None)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     staff_id = models.ForeignKey(Staff, on_delete=models.CASCADE)
     transaction_date = models.DateTimeField()
