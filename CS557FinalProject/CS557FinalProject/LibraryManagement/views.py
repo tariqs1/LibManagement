@@ -11,7 +11,7 @@ from .forms import UserRegistrationForm, ReviewForm, BookForm
 def home(request):
     latest_books = Book.objects.annotate(
         average_rating=Avg('reviews__rating')
-    ).order_by('-id')[:8]
+    ).order_by('-book_id')[:8]
     return render(request, 'home.html', {'latest_books': latest_books})
 
 
