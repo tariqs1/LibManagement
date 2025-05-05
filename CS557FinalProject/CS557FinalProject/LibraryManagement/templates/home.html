@@ -3,6 +3,13 @@
 {% block title %}Home - Library Management System{% endblock %}
 
 {% block content %}
+    <div class="search-container my-4">
+    <div class="container text-center">
+        <a href="{% url 'book_list' %}" class="btn btn-warning btn-lg">
+            <i class="fas fa-search mr-2"></i> Search Books
+        </a>
+    </div>
+    </div>
     <div class="container my-5">
         <div class="row text-center">
             <div class="col-md-4 mb-4">

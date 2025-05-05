@@ -1,62 +1,111 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Books - Library Management System{% endblock %}
+{% block title %} Book Search - Library Management System{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-8">
-        <h2>Book Catalog</h2>
-        {% if query %}
-            <p>Search results for: "{{ query }}"</p>
-        {% endif %}
-    </div>
-    <div class="col-md-4 text-right">
-        {% if user.is_authenticated and user.user_type == 'ADMIN' or user.user_type == 'AUTHOR' %}
-            <a href="{% url 'add_book' %}" class="btn btn-primary">Add New Book</a>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row">
-    {% for book in books %}
-        <div class="col-md-3 mb-4">
-            <div class="card book-card h-100">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
-                {% else %}
-                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <i class="fas fa-book fa-3x text-secondary"></i>
-                    </div>
-                {% endif %}
+        <div class="col-md-12">
+            <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ book.title }}</h5>
-                    <p class="card-text">By {{ book.author }}</p>
-                    <div class="stars">
-                        {% if book.average_rating %}
-                            {% for i in "12345"|make_list %}
-                                {% if forloop.counter <= book.average_rating|floatformat:"0" %}
-                                    <i class="fas fa-star"></i>
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" name="title" class="form-control" placeholder="Title" value="{{ search_params.p_title|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="isbn" class="form-control" placeholder="ISBN" value="{{ search_params.p_isbn|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="author" class="form-control" placeholder="Author" value="{{ search_params.p_author|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="genre" class="form-control" placeholder="Genre" value="{{ search_params.p_genre|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{% url 'book_list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-undo"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Search Results</h2>
+            {% if books %}
+                <p class="text-muted">
+                    Found {{ books|length }} book{{ books|pluralize }}
+                    {% if search_params.p_title %} matching title "{{ search_params.p_title }}"{% endif %}
+                    {% if search_params.p_isbn %} with ISBN "{{ search_params.p_isbn }}"{% endif %}
+                    {% if search_params.p_author %} by author "{{ search_params.p_author }}"{% endif %}
+                    {% if search_params.p_genre %} in genre "{{ search_params.p_genre }}"{% endif %}
+                </p>
+            {% endif %}
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user.is_authenticated and user.user_type in 'ADMIN,AUTHOR' %}
+                <a href="{% url 'add_book' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Book
+                </a>
+            {% endif %}
+        </div>
+</div>
+<div class="row">
+        {% for book in books %}
+            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                <div class="card book-card h-100 shadow-sm">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image }}" class="card-img-top book-cover" alt="{{ book.title }}">
+                    {% else %}
+                        <div class="card-img-top book-cover-placeholder d-flex align-items-center justify-content-center">
+                            <i class="fas fa-book-open fa-3x text-secondary"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text text-muted">
+                            <small>ISBN: {{ book.isbn }}</small>
+                        </p>
+                        <p class="card-text">
+                            By {% for author in book.authors %}{{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        </p>
+                        <div class="mb-2">
+                            {% if book.genres %}
+                                <span class="badge bg-info text-dark">
+                                    {% for genre in book.genres %}{{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-{% if book.is_available %}success{% else %}danger{% endif %}">
+                                {% if book.is_available %}
+                                    Available
                                 {% else %}
-                                    <i class="far fa-star"></i>
+                                    Checked Out
                                 {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            <small class="text-muted">No ratings yet</small>
-                        {% endif %}
+                            </span>
+                            <a href="{% url 'book_detail' book.book_id %}" class="btn btn-sm btn-outline-primary">
+                                Details <i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </div>
                     </div>
-                    <p class="card-text mt-2"><small class="text-muted">Available: {{ book.available_copies }}</small></p>
-                </div>
-                <div class="card-footer bg-white border-top-0">
-                    <a href="{% url 'book_detail' book.id %}" class="btn btn-primary btn-sm btn-block">View Details</a>
                 </div>
             </div>
-        </div>
-    {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info">
-                No books found. {% if query %}Try a different search term.{% endif %}
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    No books found matching your criteria.
+                    <a href="{% url 'book_list' %}" class="alert-link ms-2">Clear search</a>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
 </div>
 {% endblock %}

@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +7,7 @@ from django.db.models import Avg
 from datetime import date, timedelta
 from .models import Book, Review, Borrowing, User, Author
 from .forms import UserRegistrationForm, ReviewForm, BookForm
+from django.db.models import Q
 
 
 def home(request):
@@ -14,22 +16,34 @@ def home(request):
     ).order_by('-book_id')[:8]
     return render(request, 'home.html', {'latest_books': latest_books})
 
-
 def book_list(request):
-    query = request.GET.get('q', '')
-    books = Book.objects.all()
+    search = {
+        'search_title': request.GET.get('title', None),
+        'search_isbn': request.GET.get('isbn', None),
+        'search_author': request.GET.get('author', None),
+        'search_genre': request.GET.get('genre', None),
+    }
 
-    if query:
-        books = books.filter(title__icontains=query) | books.filter(
-            author__user__first_name__icontains=query) | books.filter(author__user__last_name__icontains=query)
+    books = []
+    with connection.cursor() as cursor:
+        cursor.callproc('search_bar', [
+            search['search_title'],
+            search['search_isbn'],
+            search['search_author'],
+            search['search_genre']
+        ])
 
-    books = books.annotate(average_rating=Avg('reviews__rating'))
+        columns = [col[0] for col in cursor.description]
+        books = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        for book in books:
+            book['authors'] = book['authors'].split(',') if book['authors'] else []
+            book['genres'] = book['genres'].split(',') if book['genres'] else []
 
     return render(request, 'book_list.html', {
         'books': books,
-        'query': query
+        'search': {k: v for k, v in search.items() if v is not None}
     })
-
 
 def book_detail(request, book_id):
     book = get_object_or_404(Book, id=book_id)
