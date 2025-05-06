@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
-import pymysql
-pymysql.install_as_MySQLdb()
-from decouple import config
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -59,7 +57,7 @@ ROOT_URLCONF = 'CS557FinalProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'LibraryManagement', 'templates')],  # Note the comma instead of slash
+        'DIRS': [os.path.join(BASE_DIR, 'CS557FinalProject', 'LibraryManagement', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,15 +74,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'CS557FinalProject.wsgi.application'
 
 
-# Database settings for SQLite
+# Database settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db',
+        'NAME': 'mydb',
         'USER': 'root',
-        'PASSWORD': 'saniaadmin',
+        'PASSWORD': '6544609',
         'HOST': 'localhost',
         'PORT': '3306',
+        'TEST': {
+            'NAME': 'test_mydb',  # Separate database for tests
+        }
     }
 }
 

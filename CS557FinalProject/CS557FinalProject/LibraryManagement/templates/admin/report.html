@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Library Reports</h1>
+
+    <!-- Report Filters -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Report Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="type" class="form-label">Report Type</label>
+                    <select name="type" id="type" class="form-select">
+                        <option value="borrowing" {% if report_type == 'borrowing' %}selected{% endif %}>Borrowing Statistics</option>
+                        <option value="overdue" {% if report_type == 'overdue' %}selected{% endif %}>Overdue Books</option>
+                        <option value="revenue" {% if report_type == 'revenue' %}selected{% endif %}>Revenue Report</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Report Data -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                {% if report_type == 'borrowing' %}
+                    Borrowing Statistics
+                {% elif report_type == 'overdue' %}
+                    Overdue Books Report
+                {% else %}
+                    Revenue Report
+                {% endif %}
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        {% if report_type == 'borrowing' %}
+                        <tr>
+                            <th>Book Title</th>
+                            <th>Total Borrows</th>
+                            <th>Total Returns</th>
+                            <th>Active Borrows</th>
+                        </tr>
+                        {% elif report_type == 'overdue' %}
+                        <tr>
+                            <th>Book Title</th>
+                            <th>User</th>
+                            <th>Days Overdue</th>
+                            <th>Due Date</th>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <th>Transaction Type</th>
+                            <th>Total Amount</th>
+                            <th>Transaction Count</th>
+                        </tr>
+                        {% endif %}
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                        <tr>
+                            {% if report_type == 'borrowing' %}
+                            <td>{{ item.book__title }}</td>
+                            <td>{{ item.total_borrows }}</td>
+                            <td>{{ item.total_returns }}</td>
+                            <td>{{ item.total_borrows|sub:item.total_returns }}</td>
+                            {% elif report_type == 'overdue' %}
+                            <td>{{ item.book__title }}</td>
+                            <td>{{ item.user__email }}</td>
+                            <td>{{ item.days_overdue }}</td>
+                            <td>{{ item.due_date|date:"M d, Y" }}</td>
+                            {% else %}
+                            <td>{{ item.transaction_type }}</td>
+                            <td>${{ item.total_amount }}</td>
+                            <td>{{ item.count }}</td>
+                            {% endif %}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No data available for the selected criteria</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

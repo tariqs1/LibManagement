@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Review - {{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>Add Review for {{ book.title }}</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.rating.id_for_label }}">Rating</label>
+                    {{ form.rating }}
+                    {% if form.rating.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.rating.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.comment.id_for_label }}">Comment</label>
+                    {{ form.comment }}
+                    {% if form.comment.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.comment.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+                <a href="{% url 'book_detail' book.book_id %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

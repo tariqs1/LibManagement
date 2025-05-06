@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <h1>{{ author.first_name }} {{ author.last_name }}</h1>
+            <p class="lead">{{ author.bio }}</p>
+            
+            <h2>Books by {{ author.first_name }} {{ author.last_name }}</h2>
+            <div class="row">
+                {% for book in books %}
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">{{ book.description|truncatewords:30 }}</p>
+                            <a href="{% url 'book_detail' book.book_id %}" class="btn btn-primary">View Book</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p>No books found for this author.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Author Information</h5>
+                    <p class="card-text">
+                        <strong>Name:</strong> {{ author.first_name }} {{ author.last_name }}<br>
+                        <strong>Email:</strong> {{ author.user.email }}<br>
+                        <strong>Member Since:</strong> {{ author.user.date_joined|date:"F j, Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
