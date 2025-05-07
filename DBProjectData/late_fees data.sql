@@ -1,11 +1,12 @@
+use finalproject;
 
 --
--- Dumping data for table `late_fees`
+-- Dumping data for table `librarymanagement_latefee`
 --
 
-LOCK TABLES `late_fees` WRITE;
-/*!40000 ALTER TABLE `late_fees` DISABLE KEYS */;
-INSERT INTO `late_fees` VALUES
+LOCK TABLES `librarymanagement_latefee` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_latefee` DISABLE KEYS */;
+INSERT INTO `librarymanagement_latefee` VALUES
 (1,1,1,10.00,'1979-12-17 13:01:53','unpaid','1971-08-10 21:42:59',NULL,'Eos voluptates dolorem sed iusto est consequatur autem. Vero eaque doloremque quia consequatur. Ipsa cupiditate laborum non unde sunt facere.'),
 (2,2,2,4.91,'1995-03-18 02:53:22','unpaid','1974-01-17 08:15:19',NULL,'Consectetur ipsa nihil dignissimos sed. Facere ea itaque eligendi sit possimus. Dolores consequatur nam quia quos pariatur. Eum neque harum eum est qui repudiandae maiores.'),
 (3,3,3,12.19,'2004-10-08 02:36:54','waived','1977-07-04 16:09:51',NULL,'Laboriosam beatae expedita quo possimus. Ipsam impedit totam quam sint sint. Recusandae explicabo sit neque inventore quisquam sed. Quam quaerat consequuntur non sed quae velit. Error qui distinctio consequatur omnis vero.'),
@@ -106,16 +107,6 @@ INSERT INTO `late_fees` VALUES
 (98,98,98,10.52,'2012-12-10 11:08:58','waived','1990-08-12 06:13:10',NULL,'Et molestiae hic quo sequi. Ut dolor atque ipsa autem dolorem. Modi natus sit dicta vel quisquam. Aut architecto amet odit.'),
 (99,99,99,25.29,'2021-03-29 13:55:35','waived','2003-06-25 04:07:11',NULL,'Dolore modi beatae enim et. Perspiciatis qui voluptate quia voluptate ratione velit quas sint. Ut eos ea voluptatum necessitatibus. Aut quod sed ea illo ipsum sint.'),
 (100,100,100,6.11,'1973-07-08 01:45:06','unpaid','1972-04-21 04:34:26',NULL,'Tempore laboriosam sunt iusto velit. Quo illo quaerat aut aut doloribus illo. Aut totam eum enim deleniti nisi. Nesciunt recusandae aliquam ut.');
-/*!40000 ALTER TABLE `late_fees` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_latefee` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-05-06 18:39:28

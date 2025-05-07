@@ -1,11 +1,12 @@
+use finalproject;
 
 --
--- Dumping data for table `book_authors`
+-- Dumping data for table `librarymanagement_bookauthor`
 --
 
-LOCK TABLES `book_authors` WRITE;
-/*!40000 ALTER TABLE `book_authors` DISABLE KEYS */;
-INSERT INTO `book_authors` VALUES
+LOCK TABLES `librarymanagement_bookauthor` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_bookauthor` DISABLE KEYS */;
+INSERT INTO `librarymanagement_bookauthor` VALUES
 (1,1),
 (2,2),
 (3,3),
@@ -106,15 +107,6 @@ INSERT INTO `book_authors` VALUES
 (103,98),
 (104,99),
 (105,100);
-/*!40000 ALTER TABLE `book_authors` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_bookauthor` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 

@@ -1,11 +1,12 @@
+use finalproject;
 
 --
--- Dumping data for table `borrowed_books`
+-- Dumping data for table `librarymanagement_borrowedbook`
 --
 
-LOCK TABLES `borrowed_books` WRITE;
-/*!40000 ALTER TABLE `borrowed_books` DISABLE KEYS */;
-INSERT INTO `borrowed_books` VALUES
+LOCK TABLES `librarymanagement_borrowedbook` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_borrowedbook` DISABLE KEYS */;
+INSERT INTO `librarymanagement_borrowedbook` VALUES
 (1,1,1,'2000-10-25 22:35:03','2005-08-13 06:51:17','1981-11-27 16:38:17',0,NULL,'borrowed'),
 (2,2,2,'2024-12-29 18:42:28','2024-10-05 03:37:16','2013-06-15 11:26:48',0,NULL,'returned'),
 (3,3,3,'1978-02-12 21:01:43','1993-10-25 16:45:55','1991-03-12 05:21:19',0,NULL,'borrowed'),
@@ -106,15 +107,5 @@ INSERT INTO `borrowed_books` VALUES
 (98,103,98,'1971-01-27 19:33:39','1975-12-31 22:06:58','2002-12-03 12:07:30',0,NULL,'overdue'),
 (99,104,99,'1986-04-05 10:02:47','2007-06-07 13:21:29','2000-09-26 19:22:13',0,NULL,'borrowed'),
 (100,105,100,'1987-11-24 23:35:12','1982-08-05 21:30:53','1971-07-12 06:24:19',0,NULL,'overdue');
-/*!40000 ALTER TABLE `borrowed_books` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_borrowedbook` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

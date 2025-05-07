@@ -1,12 +1,13 @@
+use finalproject;
 
 
 --
--- Dumping data for table `books`
+-- Dumping data for table `librarymanagement_book`
 --
 
-LOCK TABLES `books` WRITE;
-/*!40000 ALTER TABLE `books` DISABLE KEYS */;
-INSERT INTO `books` VALUES
+LOCK TABLES `librarymanagement_book` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_book` DISABLE KEYS */;
+INSERT INTO `librarymanagement_book` VALUES
 (1,'MediumTurquoise',61,'b522f86b-d5c3-313f-b','2016-01-22',142,4,5,1),
 (2,'Thistle',87,'6123f50e-49c6-384b-a','2010-09-01',472,4,5,7),
 (3,'DarkSlateBlue',91,'d41adc08-0a49-3ada-a','2004-12-16',401,1,10,11),
@@ -107,15 +108,5 @@ INSERT INTO `books` VALUES
 (103,'Cyan',84,'3836eb5c-6cc0-3771-b','1974-03-20',234,1,7,4),
 (104,'Green',13,'81987041-fba8-3d3c-8','1987-03-27',437,3,8,13),
 (105,'Orchid',97,'2a28984f-ebf1-3c35-9','1989-08-13',153,1,14,17);
-/*!40000 ALTER TABLE `books` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_book` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-

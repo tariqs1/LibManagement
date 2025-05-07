@@ -1,11 +1,12 @@
+use finalproject;
 
 --
--- Dumping data for table `publishers`
+-- Dumping data for table `librarymanagement_publisher`
 --
 
-LOCK TABLES `publishers` WRITE;
-/*!40000 ALTER TABLE `publishers` DISABLE KEYS */;
-INSERT INTO `publishers` VALUES
+LOCK TABLES `librarymanagement_publisher` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_publisher` DISABLE KEYS */;
+INSERT INTO `librarymanagement_publisher` VALUES
 (1,'Homenick Ltd','4483 Jessica Isle\nPort Selenaside, NJ 82536','247-365-8541x52429','hodkiewicz.jayme@example.net','http://www.luettgen.info/',1),
 (2,'Haley Group','9284 Feeney Islands Suite 128\nNorth Fredside, NY 64684','091.394.4341x89599','parker77@example.org','http://bogisich.com/',2),
 (3,'Emard, Steuber and Renner','73879 Keebler Trail\nEast Eddburgh, MT 52658','882.703.1935','marina.gottlieb@example.org','http://ferry.com/',3),
@@ -26,15 +27,6 @@ INSERT INTO `publishers` VALUES
 (18,'Little, Morar and Veum','23826 Rhiannon Divide\nEast Chelsie, VA 24244','(726)360-5181x512','zane67@example.com','http://purdy.com/',18),
 (19,'Rogahn, Roob and Schinner','1833 Rebeka Shore Apt. 414\nNicholehaven, MT 42938-9966','557-886-9774x44863','rogahn.caitlyn@example.com','http://www.murray.com/',19),
 (20,'Terry LLC','6952 Vandervort Forest Apt. 522\nNew Otto, CA 98881','+87(8)1338233409','douglas.roslyn@example.com','http://mertz.com/',20);
-/*!40000 ALTER TABLE `publishers` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_publisher` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 

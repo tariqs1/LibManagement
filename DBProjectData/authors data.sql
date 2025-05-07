@@ -1,11 +1,12 @@
+use finalproject;
 
 --
--- Dumping data for table `authors`
+-- Dumping data for table `librarymanagement_author`
 --
 
-LOCK TABLES `authors` WRITE;
-/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
-INSERT INTO `authors` VALUES
+LOCK TABLES `librarymanagement_author` WRITE;
+/*!40000 ALTER TABLE `librarymanagement_author` DISABLE KEYS */;
+INSERT INTO `librarymanagement_author` VALUES
 (1,'Carolyn','Schneider'),
 (2,'Leopoldo','Predovic'),
 (3,'Gonzalo','Schmidt'),
@@ -106,14 +107,5 @@ INSERT INTO `authors` VALUES
 (98,'Cristobal','Gerlach'),
 (99,'Tyree','Cronin'),
 (100,'Petra','Carter');
-/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
+/*!40000 ALTER TABLE `librarymanagement_author` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
