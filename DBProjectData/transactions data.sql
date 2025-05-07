@@ -1,11 +1,11 @@
 use finalproject;
 --
--- Dumping data for table `librarymanagement_transaction`
+-- Dumping data for table `transactions`
 --
 
-LOCK TABLES `librarymanagement_transaction` WRITE;
-/*!40000 ALTER TABLE `librarymanagement_transaction` DISABLE KEYS */;
-INSERT INTO `librarymanagement_transaction` VALUES
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+INSERT INTO `transactions` VALUES
 (1,1,1,'1986-09-24 19:38:37','renew',1,0.00,'cash','Suscipit sequi voluptatibus ut omnis laudantium. Sit maiores tenetur quam consequatur dolore aut. Aut ut quis sit rerum quasi ipsam quis dolorum. Et similique itaque quod id illo accusamus.'),
 (2,2,2,'2014-05-03 13:13:57','borrow',2,0.00,'debit_card','Labore ut blanditiis qui a sint nisi. Quod sunt assumenda sint voluptas. Accusantium quisquam explicabo doloremque rem. Impedit nostrum sit repellat.'),
 (3,3,3,'2018-09-16 12:56:58','renew',3,0.00,'online','Beatae consequuntur doloremque rerum facere dolores voluptate aut voluptatibus. Repellendus ut aspernatur minima maxime. Itaque cupiditate mollitia repellat. Dolores hic et aspernatur.'),
@@ -106,5 +106,7 @@ INSERT INTO `librarymanagement_transaction` VALUES
 (98,98,98,'1981-08-18 00:00:50','reservation',98,0.00,'online','Praesentium aliquam fuga molestiae aliquam ipsam. Necessitatibus ullam voluptatem debitis dicta officiis. Dolor dolores aut ducimus ut amet. Recusandae et eum qui quia rerum quia.'),
 (99,99,99,'2005-09-15 16:52:35','reservation',99,0.00,'online','Maxime error quis atque provident ab voluptatem et. Qui illum sit consectetur et sint officia. Facere rem necessitatibus ea voluptatem non corporis. Incidunt vel illum a et mollitia nihil.'),
 (100,100,100,'2006-04-17 09:04:03','return',100,0.00,'cash','Iste tempora voluptatibus consequatur ut fugiat reprehenderit. Repellat totam et blanditiis nisi. Amet est cupiditate vel ut. Hic nulla et enim velit sequi.');
-/*!40000 ALTER TABLE `librarymanagement_transaction` ENABLE KEYS */;
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
+
+

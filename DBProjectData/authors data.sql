@@ -1,12 +1,12 @@
 use finalproject;
 
 --
--- Dumping data for table `librarymanagement_author`
+-- Dumping data for table `authors`
 --
 
-LOCK TABLES `librarymanagement_author` WRITE;
-/*!40000 ALTER TABLE `librarymanagement_author` DISABLE KEYS */;
-INSERT INTO `librarymanagement_author` VALUES
+LOCK TABLES `authors` WRITE;
+/*!40000 ALTER TABLE `authors` DISABLE KEYS */;
+INSERT INTO `authors` VALUES
 (1,'Carolyn','Schneider'),
 (2,'Leopoldo','Predovic'),
 (3,'Gonzalo','Schmidt'),
@@ -107,5 +107,6 @@ INSERT INTO `librarymanagement_author` VALUES
 (98,'Cristobal','Gerlach'),
 (99,'Tyree','Cronin'),
 (100,'Petra','Carter');
-/*!40000 ALTER TABLE `librarymanagement_author` ENABLE KEYS */;
+/*!40000 ALTER TABLE `authors` ENABLE KEYS */;
 UNLOCK TABLES;
+

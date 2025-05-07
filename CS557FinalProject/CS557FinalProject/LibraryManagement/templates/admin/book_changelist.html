@@ -1,0 +1,7 @@
+{% extends "admin/change_list.html" %}
+{% block object-tools %}
+    <div>
+        <a href="{% url 'admin:upload_csv' %}" class="button">Upload Books CSV</a>
+    </div>
+    {{ block.super }}
+{% endblock %} 

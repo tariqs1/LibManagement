@@ -1,8 +1,8 @@
 use finalproject;
 
-LOCK TABLES `librarymanagement_librarymanagement_staff` WRITE;
-/*!40000 ALTER TABLE `librarymanagement_staff` DISABLE KEYS */;
-INSERT INTO `librarymanagement_staff` VALUES
+LOCK TABLES `staff` WRITE;
+/*!40000 ALTER TABLE `staff` DISABLE KEYS */;
+INSERT INTO `staff` VALUES
 (1,'Serenity','Ward','swift.yesenia@example.net','05864442578','','inactive','78d0f8a2f641de74e5653a5d9a1e0f33f459f778'),
 (2,'Jeanette','Walsh','kcassin@example.com','1-384-904-9041','','inactive','7b690ee046bf7c6a184075da401971b44e66caef'),
 (3,'Loyce','Cole','mertz.arlie@example.net','509.722.9787x3240','','active','16da2894c7b9d3e136796e3752d870a4334a07c5'),
@@ -103,5 +103,6 @@ INSERT INTO `librarymanagement_staff` VALUES
 (98,'Stephania','Wuckert','champlin.nicola@example.org','1-504-286-8560x61735','','inactive','ed9b6089095fab09c88987b15f36b6811e7c3c36'),
 (99,'Anna','Yundt','kieran54@example.net','1-773-701-7267','','active','e2c0da3ad45a9fc05b5df711a9bd893091559be3'),
 (100,'Susana','Boehm','wmann@example.com','1-716-110-8000','','inactive','16ef8b4fb00eb6f04a5048bd092b7c648db57008');
-/*!40000 ALTER TABLE `librarymanagement_staff` ENABLE KEYS */;
+/*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
+

@@ -1,12 +1,12 @@
 use finalproject;
 
 --
--- Dumping data for table `librarymanagement_bookgenre`
+-- Dumping data for table `books_genres`
 --
 
-LOCK TABLES `librarymanagement_bookgenre` WRITE;
-/*!40000 ALTER TABLE `librarymanagement_bookgenre` DISABLE KEYS */;
-INSERT INTO `librarymanagement_bookgenre` VALUES
+LOCK TABLES `books_genres` WRITE;
+/*!40000 ALTER TABLE `books_genres` DISABLE KEYS */;
+INSERT INTO `books_genres` VALUES
 (1,1),
 (2,2),
 (3,3),
@@ -107,5 +107,6 @@ INSERT INTO `librarymanagement_bookgenre` VALUES
 (103,8),
 (104,9),
 (105,10);
-/*!40000 ALTER TABLE `librarymanagement_bookgenre` ENABLE KEYS */;
+/*!40000 ALTER TABLE `books_genres` ENABLE KEYS */;
 UNLOCK TABLES;
+

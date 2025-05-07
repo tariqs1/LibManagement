@@ -1,12 +1,11 @@
 use finalproject;
-
 --
--- Dumping data for table `librarymanagement_user`
+-- Dumping data for table `users`
 --
 
-LOCK TABLES `librarymanagement_user` WRITE;
-/*!40000 ALTER TABLE `librarymanagement_user` DISABLE KEYS */;
-INSERT INTO `librarymanagement_user` VALUES
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES
 (1,'Leslie','Hagenes','terdman@example.org','432-510-5323x32755','845 Sawayn Rapids\nKiraborough, CT 24835','1990-02-27 19:56:37','user',76602,'3841d1393841a1f4a4c1a20f44f27eef16953a97','504c7061-04cb-3480-a9f6-f6d52e7b468f',1),
 (2,'Luis','Parker','hand.bria@example.com','+74(7)7945882651','4503 Wisozk Springs Apt. 753\nEast Elainastad, VT 93102','2023-05-09 10:48:20','user',34,'7fff4eb52746ad01e8fbcf6fe8f9b08a25617e75','6e90c5a5-2a18-376a-be4d-8104893d9e66',2),
 (3,'Gerardo','McKenzie','greenfelder.kathryne@example.net','(172)460-1011','555 Waino Courts\nSpencerside, MA 85693','1997-05-23 16:09:05','user',2781,'107f51746b1ccc59da6cb35b6c4c5d2ec74d7066','b0538c44-c2ce-309c-b809-8b655e0a1349',3),
@@ -107,5 +106,5 @@ INSERT INTO `librarymanagement_user` VALUES
 (98,'Dahlia','Bashirian','gaston.hamill@example.com','704-604-5070x21006','686 Stephanie Key\nPort Carmelo, AK 00065','2019-06-01 07:32:43','author',81133,'44ca591691cb885905922dd565070de5cc309f81','dadf769d-7766-3dbd-a218-e6c849bda0ba',98),
 (99,'Joyce','VonRueden','mrodriguez@example.com','+48(9)2286075669','075 Kathlyn Alley\nWest Woodrowport, CT 50364','1998-09-02 23:16:09','user',4572956,'920983cc1d820d9a37a07f0c04aae91414dead72','74b8dbc5-b6c0-3905-99a6-2bb18617f993',99),
 (100,'Noe','Bosco','nicola.bartoletti@example.org','261-453-8478','83794 Dustin Brooks Suite 105\nSouth Joanyport, LA 65514-3648','2005-09-23 06:17:20','user',22,'2b75e1a7892624d953e17d83f3201a0c8351ae39','46588e9a-a675-363a-a65a-a85644e1f8a7',100);
-/*!40000 ALTER TABLE `librarymanagement_user` ENABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;

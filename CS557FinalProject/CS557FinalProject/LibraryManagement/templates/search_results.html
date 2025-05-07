@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - Library Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Search Results</h2>
+    {% if query %}
+        <p>Showing results for: "{{ query }}"</p>
+    {% endif %}
+
+    {% if books %}
+        <div class="row">
+            {% for book in books %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                                <strong>ISBN:</strong> {{ book.isbn }}<br>
+                                <strong>Available Copies:</strong> {{ book.available_copies }}/{{ book.total_copies }}
+                            </p>
+                            <a href="{% url 'book_detail' book.id %}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        {% if query %}
+            <div class="alert alert-info">
+                No books found matching your search criteria.
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Please enter a search term to find books.
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %} 
