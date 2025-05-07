@@ -17,8 +17,9 @@
                     {% endif %}
                     
                     <div class="form-group">
-                        <label for="id_username">Username:</label>
-                        <input type="text" name="username" class="form-control" id="id_username" required>
+                        <label for="id_email">Email Address:</label>
+                        <input type="email" name="email" class="form-control" id="id_email" required>
+                        <small class="form-text text-muted">Please enter your email address to login</small>
                     </div>
                     
                     <div class="form-group">
@@ -26,10 +27,12 @@
                         <input type="password" name="password" class="form-control" id="id_password" required>
                     </div>
                     
-                    {% if error %}
-                        <div class="alert alert-danger">
-                            <p>{{ error }}</p>
-                        </div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     {% endif %}
                     
                     <button type="submit" class="btn btn-primary btn-block">Login</button>

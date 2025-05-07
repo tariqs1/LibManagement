@@ -9,6 +9,7 @@ from ..models import (
     BookAuthor, BookGenre, Genre
 )
 from decimal import Decimal
+import uuid
 
 User = get_user_model()
 
@@ -81,12 +82,12 @@ class LibrarySystemIntegrationTest(TestCase):
         
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",  # Generate a 13-digit ISBN-like number
             publication_date=timezone.now().date(),
-            pages=200,
-            available_copies=5,
             total_copies=5,
-            description='Test Description',
+            available_copies=5,
+            pages=200,
+            description='Test description',
             publisher=self.publisher
         )
         
@@ -167,55 +168,83 @@ class LibrarySystemIntegrationTest(TestCase):
         self.assertEqual(review.comment, 'Great book!')
         
     def test_transaction_system(self):
+        print("\n=== Starting test_transaction_system ===")
+        
         # Login staff
+        print("Logging in as staff...")
         self.client.force_login(self.staff_user)
+        print(f"Staff user: {self.staff_user}")
+        print(f"Staff user type: {self.staff_user.user_type}")
+        print(f"Staff user is staff: {self.staff_user.is_staff}")
         
         # Test creating a transaction
+        print("\nTesting borrow transaction creation...")
         transaction_data = {
             'book': self.book.book_id,
+            'user': self.user.id,
             'transaction_type': 'BORROW',
             'amount': '0.00',
             'payment_method': 'CASH',
             'note': 'Test transaction'
         }
+        print(f"Transaction data: {transaction_data}")
         response = self.client.post(reverse('create_transaction'), transaction_data)
+        print(f"Response status: {response.status_code}")
+        print(f"Response URL: {response.url}")
+        print(f"Response content: {response.content[:200]}...")  # First 200 chars
         self.assertEqual(response.status_code, 302)  # Redirect after successful transaction
+        self.assertEqual(response.url, reverse('transaction_list'))  # Should redirect to transaction list
         
         # Verify transaction was created
-        transaction = Transaction.objects.get(user=self.staff_user, book=self.book)
+        print("\nVerifying transaction creation...")
+        transaction = Transaction.objects.get(user=self.user, book=self.book)
+        print(f"Created transaction: {transaction}")
+        print(f"Transaction details: {transaction.__dict__}")
         self.assertIsNotNone(transaction)
         self.assertEqual(transaction.transaction_type, 'BORROW')
         self.assertEqual(transaction.amount, Decimal('0.00'))
         
         # Test creating a return transaction
+        print("\nTesting return transaction creation...")
         transaction_data = {
             'book': self.book.book_id,
+            'user': self.user.id,
             'transaction_type': 'RETURN',
             'amount': '0.00',
             'note': 'Test return'
         }
+        print(f"Return transaction data: {transaction_data}")
         response = self.client.post(reverse('create_transaction'), transaction_data)
-        self.assertEqual(response.status_code, 302)
+        print(f"Response status: {response.status_code}")
+        print(f"Response URL: {response.url}")
+        print(f"Response content: {response.content[:200]}...")  # First 200 chars
+        self.assertEqual(response.status_code, 302)  # Redirect after successful transaction
+        self.assertEqual(response.url, reverse('transaction_list'))  # Should redirect to transaction list
         
         # Verify return transaction was created
+        print("\nVerifying return transaction creation...")
         return_transaction = Transaction.objects.filter(
-            user=self.staff_user,
+            user=self.user,
             book=self.book,
             transaction_type='RETURN'
         ).first()
+        print(f"Created return transaction: {return_transaction}")
+        print(f"Return transaction details: {return_transaction.__dict__ if return_transaction else 'None'}")
         self.assertIsNotNone(return_transaction)
         self.assertEqual(return_transaction.amount, Decimal('0.00'))
         
+        print("=== test_transaction_system completed ===\n")
+        
     def test_book_search_and_filter(self):
-        # Create additional test books
+        # Create another book for testing
         another_book = Book.objects.create(
             title='Another Book',
-            isbn='0987654321',
+            isbn=f"978{uuid.uuid4().hex[:9]}",  # Generate a 13-digit ISBN-like number
             publication_date=timezone.now().date(),
-            pages=150,
-            available_copies=3,
             total_copies=3,
-            description='Another Test Description',
+            available_copies=3,
+            pages=150,
+            description='Another test description',
             publisher=self.publisher
         )
         

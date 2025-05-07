@@ -7,6 +7,7 @@ from ..models import (
     Borrowing, Review, Transaction, Staff,
     Genre, BookAuthor
 )
+import uuid
 
 class UserModelTest(TestCase):
     def setUp(self):
@@ -75,7 +76,7 @@ class BookModelTest(TestCase):
         )
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",
             publication_date=timezone.now().date(),
             total_copies=5,
             available_copies=5,
@@ -121,7 +122,7 @@ class BorrowingModelTest(TestCase):
         )
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",
             publication_date=timezone.now().date(),
             available_copies=1,
             total_copies=1,
@@ -177,7 +178,7 @@ class ReviewModelTest(TestCase):
         )
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",
             publication_date=timezone.now().date(),
             available_copies=1,
             total_copies=1,
@@ -254,7 +255,7 @@ class TransactionModelTest(TestCase):
         )
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",
             publication_date=timezone.now().date(),
             available_copies=1,
             total_copies=1,

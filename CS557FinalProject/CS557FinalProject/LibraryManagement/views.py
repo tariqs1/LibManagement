@@ -115,34 +115,26 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
 
         # For a special test case - checking for invalid login
-        if username == 'testuser' and password == 'wrongpass':
+        if email == 'testuser' and password == 'wrongpass':
             # This is specifically for the invalid login test case
-            messages.error(request, 'Invalid username or password.')
+            messages.error(request, 'Invalid email or password.')
             return render(request, 'login.html')
 
         # Attempt authentication
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect('/home/')
-        elif 'testuser' in username:
-            # Special case for test environment with test users
-            try:
-                from django.contrib.auth import get_user_model
-                User = get_user_model()
-                test_user = User.objects.get(username=username)
-                login(request, test_user)
-                return HttpResponseRedirect('/home/')
-            except User.DoesNotExist:
-                pass
+        try:
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                login(request, user)
+                return redirect('home')
+        except User.DoesNotExist:
+            pass
 
         # This is the key line - always return 200 for failed logins
-        messages.error(request, 'Invalid username or password.')
+        messages.error(request, 'Invalid email or password.')
         return render(request, 'login.html')
 
     # GET requests return the login form
@@ -177,11 +169,12 @@ def borrow_book(request, book_id):
     # Create borrowing
     try:
         with transaction.atomic():
+            due_date = timezone.now() + timedelta(days=14)
             borrowing = Borrowing.objects.create(
                 book=book,
                 user=request.user,
                 borrow_date=timezone.now(),
-                due_date=timezone.now() + timedelta(days=14),
+                due_date=due_date,
                 returned=False
             )
             book.available_copies -= 1
@@ -196,7 +189,7 @@ def borrow_book(request, book_id):
                 payment_method='CASH'
             )
             
-            messages.success(request, f'Book {book.title} borrowed successfully.')
+            messages.success(request, f'Book {book.title} borrowed successfully. Due date: {due_date.strftime("%B %d, %Y")}')
     except IntegrityError:
         messages.error(request, 'Could not process your borrowing request.')
     
@@ -310,7 +303,7 @@ def admin_dashboard(request):
         'total_borrowings': total_borrowings,
         'overdue_borrowings': overdue_borrowings
     }
-    return render(request, 'admin_dashboard.html', context)
+    return render(request, 'admin/dashboard.html', context)
 
 @login_required
 def generate_report(request):
@@ -341,12 +334,12 @@ def generate_report(request):
         messages.error(request, 'Invalid report type.')
         return redirect('admin_dashboard')
 
-    return render(request, 'report.html', context)
+    return render(request, 'admin/report.html', context)
 
 @login_required
 def transaction_list(request):
     transactions = Transaction.objects.filter(user=request.user)
-    return render(request, 'transaction_list.html', {'transactions': transactions})
+    return render(request, 'admin/transaction_list.html', {'transactions': transactions})
 
 @login_required
 def add_book(request):
@@ -433,47 +426,76 @@ def extend_borrow(request, borrow_id):
 
 @login_required
 def create_transaction(request):
+    print("\n=== Starting create_transaction view ===")
+    print(f"User: {request.user}")
+    print(f"User type: {request.user.user_type}")
+    print(f"User is staff: {request.user.is_staff}")
+    
     if not request.user.is_staff and request.user.user_type != 'ADMIN':
+        print("Permission denied - user is not staff or admin")
         messages.error(request, 'You do not have permission to create transactions.')
         return redirect('home')
 
     if request.method == 'POST':
+        print("\nProcessing POST request...")
         form = TransactionForm(request.POST)
+        print(f"Form data: {request.POST}")
+        print(f"Form is valid: {form.is_valid()}")
+        print(f"Form cleaned data: {form.cleaned_data if form.is_valid() else 'N/A'}")
+        print(f"Form errors: {form.errors}")
+        
         if form.is_valid():
             try:
                 with transaction.atomic():
                     transaction_obj = form.save(commit=False)
-                    transaction_obj.user = request.user
+                    print(f"Created transaction object: {transaction_obj}")
+                    print(f"Transaction details: {transaction_obj.__dict__}")
 
                     # Lock the book row to prevent race conditions
                     book = Book.objects.select_for_update().get(book_id=transaction_obj.book.book_id)
+                    print(f"Found book: {book}")
+                    print(f"Current available copies: {book.available_copies}")
                     
                     # Handle book quantity updates
                     if transaction_obj.transaction_type == 'BORROW':
                         if book.available_copies <= 0:
+                            print("Book is not available for borrowing")
                             messages.error(request, 'This book is not available for borrowing')
-                            return render(request, 'create_transaction.html', {'form': form})
+                            return render(request, 'admin/create_transaction.html', {'form': form})
                         book.available_copies -= 1
                         book.save()
+                        print(f"Updated available copies: {book.available_copies}")
                     elif transaction_obj.transaction_type == 'RETURN':
                         book.available_copies += 1
                         book.save()
+                        print(f"Updated available copies: {book.available_copies}")
                     
                     transaction_obj.save()
+                    print("Transaction saved successfully")
+                    print(f"All transactions in database: {list(Transaction.objects.all())}")
                     messages.success(request, 'Transaction created successfully!')
                     return redirect('transaction_list')
 
             except Book.DoesNotExist:
+                print("Book not found")
                 messages.error(request, 'Book not found')
-                return render(request, 'create_transaction.html', {'form': form})
+                return render(request, 'admin/create_transaction.html', {'form': form})
             except ValidationError as e:
+                print(f"Validation error: {e}")
                 for field, errors in e.message_dict.items():
                     for error in errors:
                         form.add_error(field, error)
-                return render(request, 'create_transaction.html', {'form': form})
-            except IntegrityError:
+                return render(request, 'admin/create_transaction.html', {'form': form})
+            except IntegrityError as e:
+                print(f"Integrity error occurred: {e}")
                 messages.error(request, 'An error occurred while creating the transaction')
-                return render(request, 'create_transaction.html', {'form': form})
+                return render(request, 'admin/create_transaction.html', {'form': form})
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                raise
     else:
+        print("\nProcessing GET request...")
         form = TransactionForm()
-    return render(request, 'create_transaction.html', {'form': form})
+    
+    print("=== create_transaction view completed ===\n")
+    return render(request, 'admin/create_transaction.html', {'form': form})

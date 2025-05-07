@@ -18,6 +18,7 @@ from ..forms import (
     BorrowingForm
 )
 from ..models import User, Author, Publisher, Location, Book, Genre, Transaction, BookAuthor, BookGenre
+import uuid
 
 class FormTests(TestCase):
     def setUp(self):
@@ -66,7 +67,7 @@ class FormTests(TestCase):
         # Create test book
         self.book = Book.objects.create(
             title='Test Book',
-            isbn='1234567890',
+            isbn=f"978{uuid.uuid4().hex[:9]}",
             publication_date=timezone.now().date(),
             pages=200,
             available_copies=5,
@@ -137,7 +138,7 @@ class FormTests(TestCase):
         form_data = {
             'title': 'Test Book',
             'authors': [self.author.author_id],
-            'isbn': '0987654321',
+            'isbn': f"978{uuid.uuid4().hex[:9]}",  # Generate a 13-digit ISBN-like number
             'publication_date': '2024-01-01',
             'pages': 200,
             'available_copies': 5,

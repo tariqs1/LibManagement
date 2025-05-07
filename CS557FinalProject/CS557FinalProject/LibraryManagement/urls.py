@@ -21,8 +21,8 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('search/', views.search, name='search'),
-    path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    path('admin/reports/', views.generate_report, name='generate_report'),
-    path('admin/transactions/', views.transaction_list, name='transaction_list'),
+    path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('dashboard/reports/', views.generate_report, name='generate_report'),
+    path('dashboard/transactions/', views.transaction_list, name='transaction_list'),
     path('transactions/create/', views.create_transaction, name='create_transaction'),
 ] 

@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mydb',
         'USER': 'root',
-        'PASSWORD': '6544609',
+        'PASSWORD': '6544609Mh',
         'HOST': 'localhost',
         'PORT': '3306',
         'TEST': {
@@ -137,7 +137,7 @@ AUTH_USER_MODEL = 'LibraryManagement.User'
 # Static files configuration
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'LibraryManagement/static'),
+    os.path.join(BASE_DIR, 'CS557FinalProject', 'LibraryManagement', 'static'),
 ]
 
 # Media files configuration

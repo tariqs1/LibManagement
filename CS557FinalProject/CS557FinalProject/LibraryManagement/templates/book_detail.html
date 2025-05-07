@@ -6,8 +6,8 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4">
-        {% if book.cover_image %}
-            <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="img-fluid rounded">
+        {% if book.cover_image_url %}
+            <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" class="img-fluid rounded">
         {% else %}
             <img src="{% static 'images/default_book_cover.jpg' %}" alt="Default Cover" class="img-fluid rounded">
         {% endif %}

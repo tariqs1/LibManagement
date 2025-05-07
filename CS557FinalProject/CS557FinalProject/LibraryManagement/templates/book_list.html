@@ -20,8 +20,8 @@
     {% for book in books %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+                {% if book.cover_image_url %}
+                    <img src="{{ book.cover_image_url }}" class="card-img-top" alt="{{ book.title }}">
                 {% else %}
                     <img src="{% static 'images/default_book_cover.jpg' %}" class="card-img-top" alt="Default Cover">
                 {% endif %}

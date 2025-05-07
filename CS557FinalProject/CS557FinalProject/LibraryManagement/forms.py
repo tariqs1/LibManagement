@@ -462,6 +462,12 @@ class TransactionForm(forms.ModelForm):
         ('ONLINE', 'Online Payment'),
     )
 
+    user = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=True
+    )
+
     transaction_type = forms.ChoiceField(
         choices=TRANSACTION_TYPE_CHOICES,
         widget=forms.Select(attrs={'class': 'form-control'})
@@ -478,34 +484,39 @@ class TransactionForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     note = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3})
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        required=False
     )
 
     class Meta:
         model = Transaction
-        fields = ['book', 'transaction_type', 'amount', 'payment_method', 'note']
+        fields = ['user', 'book', 'transaction_type', 'amount', 'payment_method', 'note']
         widgets = {
             'book': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def clean(self):
         cleaned_data = super().clean()
+        user = cleaned_data.get('user')
+        book = cleaned_data.get('book')
         transaction_type = cleaned_data.get('transaction_type')
         amount = cleaned_data.get('amount')
         payment_method = cleaned_data.get('payment_method')
-        book = cleaned_data.get('book')
 
-        if transaction_type in ['BORROW', 'RETURN'] and amount != 0:
-            self.add_error('amount', f'{transaction_type.capitalize()} transactions should have zero amount')
+        if not user:
+            self.add_error('user', 'User is required')
+        if not book:
+            self.add_error('book', 'Book is required')
+        if not transaction_type:
+            self.add_error('transaction_type', 'Transaction type is required')
 
+        if transaction_type == 'FINE' and (not amount or amount <= 0):
+            self.add_error('amount', 'Amount is required for fine transactions')
         if transaction_type == 'FINE' and not payment_method:
             self.add_error('payment_method', 'Payment method is required for fine transactions')
 
-        if transaction_type == 'BORROW' and book and book.available_copies <= 0:
-            self.add_error('book', 'This book is not available for borrowing')
-
-        if amount is not None and amount < 0:
-            self.add_error('amount', 'Amount cannot be negative')
-
         return cleaned_data
+
+
+class BookCSVUploadForm(forms.Form):
+    csv_file = forms.FileField(label="Select CSV file")
