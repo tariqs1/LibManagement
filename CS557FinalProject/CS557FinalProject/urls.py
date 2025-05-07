@@ -15,24 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib.auth import views as auth_views
-from CS557FinalProject.LibraryManagement import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('books/', views.book_list, name='book_list'),
-    path('books/<int:book_id>/', views.book_detail, name='book_detail'),
-    path('books/<int:book_id>/borrow/', views.borrow_book, name='borrow_book'),
-    path('books/add/', views.add_book, name='add_book'),
-    path('borrows/<int:borrow_id>/return/', views.return_book, name='return_book'),
-    path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
-    path('profile/', views.profile, name='profile'),
+    path('', include('CS557FinalProject.LibraryManagement.urls')),
 ]
 
 if settings.DEBUG:
