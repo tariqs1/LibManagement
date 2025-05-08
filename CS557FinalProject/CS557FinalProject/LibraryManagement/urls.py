@@ -10,7 +10,6 @@ urlpatterns = [
     path('books/<int:book_id>/edit/', views.edit_book, name='edit_book'),
     path('books/<int:book_id>/delete/', views.delete_book, name='delete_book'),
     path('books/<int:book_id>/reserve/', views.reserve_book, name='reserve_book'),
-    path('books/<int:book_id>/review/', views.add_review, name='add_review'),
     path('borrows/<int:borrow_id>/return/', views.return_book, name='return_book'),
     path('borrow/<int:borrow_id>/extend/', views.extend_borrow, name='extend_borrow'),
     path('authors/', views.author_list, name='author_list'),

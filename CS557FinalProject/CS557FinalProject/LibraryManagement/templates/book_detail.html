@@ -32,7 +32,6 @@
             {% else %}
                 <button class="btn btn-secondary" disabled>Not Available</button>
             {% endif %}
-            <a href="{% url 'add_review' book.book_id %}" class="btn btn-info">Add Review</a>
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-primary">Login to Borrow</a>
         {% endif %}
@@ -58,4 +57,31 @@
         {% endif %}
     </div>
 </div>
+
+{% if user.is_authenticated %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h3>Leave a Review</h3>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+{% else %}
+    <div class="alert alert-info mt-4">
+        <a href="{% url 'login' %}">Login</a> to leave a review.
+    </div>
+{% endif %}
 {% endblock %}

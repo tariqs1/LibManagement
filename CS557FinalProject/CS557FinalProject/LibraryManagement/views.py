@@ -248,38 +248,6 @@ def return_book(request, borrow_id):
     return redirect('profile')
 
 
-@login_required
-def add_review(request, book_id):
-    book = get_object_or_404(Book, book_id=book_id)
-
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.book = book
-            review.user = request.user
-            review.save()
-            messages.success(request, 'Your review has been added!')
-            return redirect('book_detail', book_id=book.book_id)
-        else:
-            messages.error(request, 'Please correct the errors below.')
-            return render(request, 'book_detail.html', {
-                'book': book,
-                'reviews': book.reviews.all().order_by('-created_at'),
-                'form': form,
-                'is_borrowed': Borrowing.objects.filter(book=book, user=request.user, returned=False).exists()
-            })
-    else:
-        form = ReviewForm()
-
-    return render(request, 'book_detail.html', {
-        'book': book,
-        'reviews': book.reviews.all().order_by('-created_at'),
-        'form': form,
-        'is_borrowed': Borrowing.objects.filter(book=book, user=request.user, returned=False).exists()
-    })
-
-
 def edit_profile(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Please login to edit your profile.')
