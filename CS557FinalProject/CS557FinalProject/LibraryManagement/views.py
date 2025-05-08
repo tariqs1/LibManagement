@@ -12,12 +12,13 @@ from django.http import HttpResponseForbidden
 from .models import Book, Review, Borrowing, User, Author, Transaction, Staff, Publisher, Genre, BookGenre, BookAuthor, Location
 from .forms import (
     UserRegistrationForm, ReviewForm, BookForm, BookEditForm, UserProfileForm,
-    BookExtensionForm, BookReservationForm, AuthorForm, PublisherForm, TransactionForm
+    BookExtensionForm, BookReservationForm, AuthorForm, PublisherForm, TransactionForm, ContactForm
 )
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.db import transaction
+from django.core.paginator import Paginator
 
 
 def home(request):
@@ -28,6 +29,8 @@ def home(request):
 
 def book_list(request):
     search_query = request.GET.get('search', None)
+    page_number = request.GET.get('page', 1)
+    sort_by = request.GET.get('sort', 'title')  # Default sort by title
 
     books = Book.objects.all()
     if search_query:
@@ -39,23 +42,38 @@ def book_list(request):
             Q(genres__name__icontains=search_query)
         ).distinct()
 
+    # Apply sorting
+    if sort_by == 'title':
+        books = books.order_by('title')
+    elif sort_by == 'author':
+        books = books.order_by('authors__last_name', 'authors__first_name', 'title')
+
     books = books.prefetch_related('authors', 'genres')
     
+    # Create a paginator with 100 books per page
+    paginator = Paginator(books, 100)
+    page_obj = paginator.get_page(page_number)
+    
     book_list = []
-    for book in books:
+    for book in page_obj:
         book_data = {
             'book_id': book.book_id,
             'title': book.title,
             'isbn': book.isbn,
             'authors': [f"{author.first_name} {author.last_name}" for author in book.authors.all()],
             'genres': [genre.name for genre in book.genres.all()],
-            'is_available': book.available_copies > 0
+            'is_available': book.available_copies > 0,
+            'cover_image_url': book.cover_image_url,
+            'available_copies': book.available_copies,
+            'total_copies': book.total_copies
         }
         book_list.append(book_data)
 
     return render(request, 'book_list.html', {
         'books': book_list,
-        'search': search_query
+        'search': search_query,
+        'page_obj': page_obj,
+        'current_sort': sort_by
     })
 
 def book_detail(request, book_id):
@@ -499,3 +517,21 @@ def create_transaction(request):
     
     print("=== create_transaction view completed ===\n")
     return render(request, 'admin/create_transaction.html', {'form': form})
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                ['library@example.com'],  # Change to your librarian's email
+            )
+            messages.success(request, 'Your message has been sent!')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})

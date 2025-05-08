@@ -51,7 +51,7 @@
                     {% for borrow in borrowed_books %}
                         <tr>
                             <td>
-                                <a href="{% url 'book_detail' borrow.book.id %}">{{ borrow.book.title }}</a>
+                                <a href="{% url 'book_detail' borrow.book.book_id %}">{{ borrow.book.title }}</a>
                             </td>
                             <td>{{ borrow.borrow_date|date:"M d, Y" }}</td>
                             <td>
@@ -93,7 +93,7 @@
                     {% for borrow in past_borrows %}
                         <tr>
                             <td>
-                                <a href="{% url 'book_detail' borrow.book.id %}">{{ borrow.book.title }}</a>
+                                <a href="{% url 'book_detail' borrow.book.book_id %}">{{ borrow.book.title }}</a>
                             </td>
                             <td>{{ borrow.borrow_date|date:"M d, Y" }}</td>
                             <td>{{ borrow.return_date|date:"M d, Y" }}</td>
@@ -121,7 +121,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h5 class="card-title">
-                            <a href="{% url 'book_detail' review.book.id %}">{{ review.book.title }}</a>
+                            <a href="{% url 'book_detail' review.book.book_id %}">{{ review.book.title }}</a>
                         </h5>
                         <div class="stars">
                             {% for i in "12345"|make_list %}
