@@ -42,10 +42,10 @@
             {% if books %}
                 <p class="text-muted">
                     Found {{ books|length }} book{{ books|pluralize }}
-                    {% if search_params.p_title %} matching title "{{ search_params.p_title }}"{% endif %}
-                    {% if search_params.p_isbn %} with ISBN "{{ search_params.p_isbn }}"{% endif %}
-                    {% if search_params.p_author %} by author "{{ search_params.p_author }}"{% endif %}
-                    {% if search_params.p_genre %} in genre "{{ search_params.p_genre }}"{% endif %}
+                    {% if search_bar.search_title %} matching title "{{ search_bar.search_title }}"{% endif %}
+                    {% if search_bar.search_isbn %} with ISBN "{{ search_bar.search_isbn }}"{% endif %}
+                    {% if search_bar.search_author %} by author "{{ search_bar.search_author }}"{% endif %}
+                    {% if search_bar.search_genre %} in genre "{{ search_bar.search_genre }}"{% endif %}
                 </p>
             {% endif %}
         </div>
