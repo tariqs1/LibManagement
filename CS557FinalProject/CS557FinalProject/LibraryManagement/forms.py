@@ -21,7 +21,7 @@ class UserRegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'user_type']
+        fields = ['email', 'first_name', 'last_name', 'password1', 'password2', 'user_type']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
@@ -41,6 +41,13 @@ class UserRegistrationForm(UserCreationForm):
             self.add_error('bio', 'Bio is required for authors')
 
         return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
 
 
 class ReviewForm(forms.ModelForm):

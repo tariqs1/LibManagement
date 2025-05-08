@@ -136,6 +136,8 @@ def register(request):
             login(request, user)
             messages.success(request, 'Registration successful!')
             return redirect('home')
+        else:
+            print(form.errors)
     else:
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
