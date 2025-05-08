@@ -5,17 +5,57 @@
 
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-8">
-        <h1>Books</h1>
-    </div>
-    <div class="col-md-4">
-        <form method="get" class="form-inline">
-            <input type="text" name="search" class="form-control mr-2" placeholder="Search books..." value="{{ request.GET.search }}">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" name="title" class="form-control" placeholder="Title" value="{{ search_params.p_title|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="isbn" class="form-control" placeholder="ISBN" value="{{ search_params.p_isbn|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="author" class="form-control" placeholder="Author" value="{{ search_params.p_author|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="genre" class="form-control" placeholder="Genre" value="{{ search_params.p_genre|default:'' }}">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <a href="{% url 'book_list' %}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-undo"></i>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 </div>
-
+<div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Search Results</h2>
+            {% if books %}
+                <p class="text-muted">
+                    Found {{ books|length }} book{{ books|pluralize }}
+                    {% if search_params.p_title %} matching title "{{ search_params.p_title }}"{% endif %}
+                    {% if search_params.p_isbn %} with ISBN "{{ search_params.p_isbn }}"{% endif %}
+                    {% if search_params.p_author %} by author "{{ search_params.p_author }}"{% endif %}
+                    {% if search_params.p_genre %} in genre "{{ search_params.p_genre }}"{% endif %}
+                </p>
+            {% endif %}
+        </div>
+        <div class="col-md-4 text-end">
+            {% if user.is_authenticated and user.user_type in 'ADMIN,AUTHOR' %}
+                <a href="{% url 'add_book' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add New Book
+                </a>
+            {% endif %}
+        </div>
 <div class="row">
     {% for book in books %}
         <div class="col-md-4 mb-4">
