@@ -16,7 +16,7 @@ from .forms import (
     BookExtensionForm, BookReservationForm, AuthorForm, PublisherForm, TransactionForm, ContactForm
 )
 from django.utils import timezone
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.db.utils import IntegrityError
 from django.db import transaction
 from django.core.paginator import Paginator
@@ -99,10 +99,13 @@ def book_detail(request, book_id):
     else:
         form = ReviewForm()
 
+    book_edit_form = BookEditForm(instance=book) if request.user.is_authenticated and request.user.user_type == 'ADMIN' else None
+
     return render(request, 'book_detail.html', {
         'book': book,
         'reviews': reviews,
         'form': form,
+        'book_edit_form': book_edit_form,
         'is_borrowed': is_borrowed
     })
 
@@ -370,13 +373,13 @@ def edit_book(request, book_id):
         messages.error(request, 'Permission denied')
         return redirect('home')
 
-    book = get_object_or_404(Book, id=book_id)
+    book = get_object_or_404(Book, book_id=book_id)
     if request.method == 'POST':
         form = BookEditForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
             messages.success(request, 'Book updated successfully')
-            return redirect('book_detail', book_id=book.id)
+            return redirect('book_detail', book_id=book.book_id)
     else:
         form = BookEditForm(instance=book)
 
@@ -510,6 +513,7 @@ def create_transaction(request):
     print("=== create_transaction view completed ===\n")
     return render(request, 'admin/create_transaction.html', {'form': form})
 
+
 def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
@@ -527,3 +531,39 @@ def contact(request):
     else:
         form = ContactForm()
     return render(request, 'contact.html', {'form': form})
+
+
+def check_admin(user):
+    return user.is_authenticated and user.user_type == 'ADMIN'
+
+
+@login_required
+def update_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    if not check_admin(request.user):
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('book_detail', book_id=book.book_id)
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'update_book.html', {'form': form, 'book': book})
+
+
+# @login_required
+# def delete_book(request, book_id):
+#     book = get_object_or_404(Book, pk=book_id)
+#
+#     if not check_admin(request.user):
+#         raise PermissionDenied
+#
+#     if request.method == 'POST':
+#         book.delete()
+#         return redirect('book_list')  # redirect to book list page
+#     else:
+#         raise PermissionDenied  # don't allow GET requests for deletes
