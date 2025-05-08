@@ -55,4 +55,48 @@
                             {% endif %}
                             <small class="form-text text-muted">{{ form.password1.help_text }}</small>
                         </div>
-                        <div class="form-group col
+                        <div class="form-group col-md-6">
+                            <label for="id_password2">Confirm Password</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.password2.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_user_type">User Type</label>
+                        {{ form.user_type }}
+                        {% if form.user_type.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.user_type.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_bio">Bio</label>
+                        {{ form.bio }}
+                        {% if form.bio.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.bio.errors }}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">{{ form.bio.help_text }}</small>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

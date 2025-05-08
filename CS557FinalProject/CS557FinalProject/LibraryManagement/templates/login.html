@@ -10,12 +10,16 @@
                 <h4 class="mb-0">Login</h4>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" action="{% url 'login' %}">
                     {% csrf_token %}
+                    {% if next %}
+                        <input type="hidden" name="next" value="{{ next }}">
+                    {% endif %}
                     
                     <div class="form-group">
-                        <label for="id_username">Email:</label>
-                        <input type="email" name="username" class="form-control" id="id_username" required>
+                        <label for="id_email">Email Address:</label>
+                        <input type="email" name="email" class="form-control" id="id_email" required>
+                        <small class="form-text text-muted">Please enter your email address to login</small>
                     </div>
                     
                     <div class="form-group">
@@ -23,10 +27,12 @@
                         <input type="password" name="password" class="form-control" id="id_password" required>
                     </div>
                     
-                    {% if form.errors %}
-                        <div class="alert alert-danger">
-                            <p>Your email or password was incorrect. Please try again.</p>
-                        </div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
                     {% endif %}
                     
                     <button type="submit" class="btn btn-primary btn-block">Login</button>

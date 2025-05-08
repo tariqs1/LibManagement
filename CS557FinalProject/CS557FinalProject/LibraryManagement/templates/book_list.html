@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} Book Search - Library Management System{% endblock %}
+{% block title %}Books - Library Management System{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
@@ -56,56 +56,69 @@
                 </a>
             {% endif %}
         </div>
-</div>
 <div class="row">
-        {% for book in books %}
-            <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                <div class="card book-card h-100 shadow-sm">
-                    {% if book.cover_image %}
-                        <img src="{{ book.cover_image }}" class="card-img-top book-cover" alt="{{ book.title }}">
-                    {% else %}
-                        <div class="card-img-top book-cover-placeholder d-flex align-items-center justify-content-center">
-                            <i class="fas fa-book-open fa-3x text-secondary"></i>
-                        </div>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text text-muted">
-                            <small>ISBN: {{ book.isbn }}</small>
-                        </p>
-                        <p class="card-text">
-                            By {% for author in book.authors %}{{ author }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                        </p>
-                        <div class="mb-2">
-                            {% if book.genres %}
-                                <span class="badge bg-info text-dark">
-                                    {% for genre in book.genres %}{{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                                </span>
-                            {% endif %}
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-{% if book.is_available %}success{% else %}danger{% endif %}">
-                                {% if book.is_available %}
-                                    Available
-                                {% else %}
-                                    Checked Out
-                                {% endif %}
-                            </span>
-                            <a href="{% url 'book_detail' book.book_id %}" class="btn btn-sm btn-outline-primary">
-                                Details <i class="fas fa-chevron-right ms-1"></i>
-                            </a>
-                        </div>
-                    </div>
+    {% for book in books %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if book.cover_image_url %}
+                    <img src="{{ book.cover_image_url }}" class="card-img-top" alt="{{ book.title }}">
+                {% else %}
+                    <img src="{% static 'images/default_book_cover.jpg' %}" class="card-img-top" alt="Default Cover">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text text-muted">
+                        By {% for author in book.authors.all %}{{ author.first_name }} {{ author.last_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Available: {{ book.available_copies }} of {{ book.total_copies }}
+                        </small>
+                    </p>
+                    <a href="{% url 'book_detail' book.book_id %}" class="btn btn-primary">View Details</a>
                 </div>
             </div>
-        {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info text-center">
-                    <i class="fas fa-info-circle me-2"></i>
-                    No books found matching your criteria.
-                    <a href="{% url 'book_list' %}" class="alert-link ms-2">Clear search</a>
-                </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No books found.
             </div>
-        {% endfor %}
+        </div>
+    {% endfor %}
 </div>
+
+{% if books.has_other_pages %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if books.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for num in books.paginator.page_range %}
+                {% if books.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if books.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
 {% endblock %}
