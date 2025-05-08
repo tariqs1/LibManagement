@@ -13,12 +13,13 @@ from .models import Book, Review, Borrowing, User, Author, Transaction, Staff, P
     Location
 from .forms import (
     UserRegistrationForm, ReviewForm, BookForm, BookEditForm, UserProfileForm,
-    BookExtensionForm, BookReservationForm, AuthorForm, PublisherForm, TransactionForm
+    BookExtensionForm, BookReservationForm, AuthorForm, PublisherForm, TransactionForm, ContactForm
 )
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.db import transaction
+from django.core.paginator import Paginator
 
 
 def home(request):
@@ -29,12 +30,15 @@ def home(request):
 
 
 def book_list(request):
+    # Advanced search bar from main
     search = {
         'search_title': request.GET.get('title', None),
         'search_isbn': request.GET.get('isbn', None),
         'search_author': request.GET.get('author', None),
         'search_genre': request.GET.get('genre', None),
     }
+    sort_by = request.GET.get('sort', 'title')  # Default sort by title
+    page_number = request.GET.get('page', 1)
 
     books = []
     with connection.cursor() as cursor:
@@ -44,22 +48,35 @@ def book_list(request):
             search['search_author'],
             search['search_genre']
         ])
-
         columns = [col[0] for col in cursor.description]
         books = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
         for book in books:
-            book['authors'] = book['authors'].split(',') if book['authors'] else []
-            book['genres'] = book['genres'].split(',') if book['genres'] else []
+            book['authors'] = book['authors'].split(',') if book.get('authors') else []
+            book['genres'] = book['genres'].split(',') if book.get('genres') else []
+
+    # Sorting (in Python, since books is a list of dicts)
+    if sort_by == 'title':
+        books.sort(key=lambda x: x.get('title', '').lower())
+    elif sort_by == 'author':
+        books.sort(key=lambda x: (x['authors'][0].lower() if x['authors'] else '', x.get('title', '').lower()))
+
+    # Pagination
+    from django.core.paginator import Paginator
+    paginator = Paginator(books, 100)
+    page_obj = paginator.get_page(page_number)
+    books_page = list(page_obj)
 
     return render(request, 'book_list.html', {
-        'books': books,
+        'books': books_page,
         'search_params': {
             'p_title': search['search_title'],
             'p_isbn': search['search_isbn'],
             'p_author': search['search_author'],
             'p_genre': search['search_genre'],
-        }
+        },
+        'page_obj': page_obj,
+        'current_sort': sort_by,
     })
 
 
@@ -524,3 +541,21 @@ def create_transaction(request):
 
     print("=== create_transaction view completed ===\n")
     return render(request, 'admin/create_transaction.html', {'form': form})
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                ['library@example.com'],  # Change to your librarian's email
+            )
+            messages.success(request, 'Your message has been sent!')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})

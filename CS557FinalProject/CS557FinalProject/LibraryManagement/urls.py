@@ -25,4 +25,5 @@ urlpatterns = [
     path('dashboard/reports/', views.generate_report, name='generate_report'),
     path('dashboard/transactions/', views.transaction_list, name='transaction_list'),
     path('transactions/create/', views.create_transaction, name='create_transaction'),
+    path('contact/', views.contact, name='contact'),
 ] 
